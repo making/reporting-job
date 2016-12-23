@@ -22,7 +22,7 @@ public class JobRequestService {
 
 	public JobStatus getLatestJobStatus(String jobRequestId) {
 		Integer statusCode = jdbcTemplate.queryForObject(
-				"SELECT job_status FROM job_request AS jr, job_event AS je WHERE jr.job_request_id = ? AND jr.job_request_id = je.job_request_id ORDER BY je.created_at DESC LIMIT 1",
+				"SELECT job_status FROM job_request AS jr INNER JOIN job_event AS je ON jr.job_request_id = je.job_request_id WHERE jr.job_request_id = ? ORDER BY je.created_at DESC LIMIT 1",
 				Integer.class, jobRequestId);
 		return JobStatus.valueOf(statusCode);
 	}

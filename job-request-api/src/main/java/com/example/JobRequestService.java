@@ -25,7 +25,7 @@ public class JobRequestService {
 
 	public Optional<JobRequest> findByJobRequestId(String jobRequestId) {
 		return jdbcTemplate.query(
-				"SELECT jr.job_request_id, jr.job_id, jr.created_at, je.job_event_id, je.job_status, je.created_at FROM job_request AS jr, job_event AS je WHERE jr.job_request_id = ? AND jr.job_request_id = je.job_request_id  ORDER BY je.created_at DESC",
+				"SELECT jr.job_request_id, jr.job_id, jr.created_at, je.job_event_id, je.job_status, je.created_at FROM job_request AS jr LEFT JOIN job_event AS je ON jr.job_request_id = je.job_request_id WHERE jr.job_request_id = ?  ORDER BY je.created_at DESC",
 				rs -> {
 					if (!rs.next()) {
 						return Optional.empty();
