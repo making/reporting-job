@@ -18,12 +18,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class JobConfig {
+public class BatchJobConfig {
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 
-	public JobConfig(JobBuilderFactory jobBuilderFactory,
-			StepBuilderFactory stepBuilderFactory) {
+	public BatchJobConfig(JobBuilderFactory jobBuilderFactory,
+                          StepBuilderFactory stepBuilderFactory) {
 		this.jobBuilderFactory = jobBuilderFactory;
 		this.stepBuilderFactory = stepBuilderFactory;
 	}
@@ -34,6 +34,7 @@ public class JobConfig {
 	}
 
 	@Bean
+	@StepScope
 	Tasklet myTasklet() {
 		return (contribution, chunkContext) -> {
 			System.out.println("Tasklet has run");
