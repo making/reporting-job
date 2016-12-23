@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.JobExecution;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,11 +28,21 @@ public class JobRequestService {
 		return JobStatus.valueOf(statusCode);
 	}
 
-	public void changeStatus(String jobRequestId, JobStatus jobStatus) {
+	public String changeStatus(String jobRequestId, JobStatus jobStatus) {
 		log.info("Change status to {} (jobRequestId={})", jobStatus, jobRequestId);
+		String jobEventId = UUID.randomUUID().toString();
 		jdbcTemplate.update(
 				"INSERT INTO job_event(job_event_id, job_request_id, job_status, created_at) VALUES (?, ?, ?, ?)",
-				UUID.randomUUID().toString(), jobRequestId, jobStatus.statusCode(),
+				jobEventId, jobRequestId, jobStatus.statusCode(),
 				Timestamp.from(Instant.now()));
+		return jobEventId;
+	}
+
+	public void saveRelationship(JobExecution jobExecution, String jobRequestId,
+			JobStatus jobStatus) {
+		changeStatus(jobRequestId, jobStatus);
+		jdbcTemplate.update(
+				"INSERT INTO job_request_execution(job_request_id, job_execution_id) VALUES (?, ?)",
+				jobRequestId, jobExecution.getJobId());
 	}
 }
