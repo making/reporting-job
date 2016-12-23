@@ -35,7 +35,7 @@ public class JobRequestListener {
 				log.info("Skip processing because current status is {}.", latestStatus);
 				return;
 			}
-			jobRequestService.changeStatus(jobRequestId, JobStatus.STARTED);
+			jobRequestService.appendEvent(jobRequestId, JobStatus.STARTED);
 			JobParameters jobParameters = new JobParametersBuilder()
 					.addString("jobRequestId", jobRequestId).addString("jobId", jobId)
 					.toJobParameters();
@@ -45,18 +45,18 @@ public class JobRequestListener {
 		}
 		catch (JobInstanceAlreadyCompleteException e) {
 			log.info("{}", e.getMessage());
-			jobRequestService.changeStatus(jobRequestId, JobStatus.FINISHED);
+			jobRequestService.appendEvent(jobRequestId, JobStatus.FINISHED);
 		}
 		catch (JobExecutionException e) {
 			log.warn("Job Execution Failed (jobRequestId={}, message={})", jobRequestId,
 					e.getMessage());
-			jobRequestService.changeStatus(jobRequestId, JobStatus.ABORTED);
+			jobRequestService.appendEvent(jobRequestId, JobStatus.ABORTED);
 			throw new RuntimeException(e);
 		}
 		catch (RuntimeException e) {
 			log.warn("Aborted (jobRequestId={}, message={})", jobRequestId,
 					e.getMessage());
-			jobRequestService.changeStatus(jobRequestId, JobStatus.ABORTED);
+			jobRequestService.appendEvent(jobRequestId, JobStatus.ABORTED);
 			throw e;
 		}
 	}

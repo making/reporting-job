@@ -28,8 +28,8 @@ public class JobRequestService {
 		return JobStatus.valueOf(statusCode);
 	}
 
-	public String changeStatus(String jobRequestId, JobStatus jobStatus) {
-		log.info("Change status to {} (jobRequestId={})", jobStatus, jobRequestId);
+	public String appendEvent(String jobRequestId, JobStatus jobStatus) {
+		log.info("Append Status(jobStatus={}, jobRequestId={})", jobStatus, jobRequestId);
 		String jobEventId = UUID.randomUUID().toString();
 		jdbcTemplate.update(
 				"INSERT INTO job_event(job_event_id, job_request_id, job_status, created_at) VALUES (?, ?, ?, ?)",
@@ -40,7 +40,7 @@ public class JobRequestService {
 
 	public void saveRelationship(JobExecution jobExecution, String jobRequestId,
 			JobStatus jobStatus) {
-		changeStatus(jobRequestId, jobStatus);
+		appendEvent(jobRequestId, jobStatus);
 		jdbcTemplate.update(
 				"INSERT INTO job_request_execution(job_request_id, job_execution_id) VALUES (?, ?)",
 				jobRequestId, jobExecution.getJobId());
