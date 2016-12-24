@@ -1,0 +1,8 @@
+applications:
+- name: reporting-job-worker
+  buildpack: java_buildpack_offline
+  memory: 512m
+  path: target/job-worker-0.0.1-SNAPSHOT.jar
+  services:
+  - job-db
+  - binder

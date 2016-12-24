@@ -3,9 +3,8 @@ CREATE TABLE IF NOT EXISTS job_request (
   job_id         VARCHAR(36) NOT NULL UNIQUE,
   created_at     TIMESTAMP   NOT NULL,
   PRIMARY KEY (job_request_id)
-) /*! ENGINE = InnoDB
-  DEFAULT CHARSET = utf8
-  COLLATE = utf8_general_ci */;
+)
+  ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS job_event (
   job_event_id   VARCHAR(36) NOT NULL,
@@ -15,9 +14,8 @@ CREATE TABLE IF NOT EXISTS job_event (
   PRIMARY KEY (job_event_id),
   FOREIGN KEY (job_request_id) REFERENCES job_request (job_request_id)
     ON DELETE CASCADE
-) /*! ENGINE = InnoDB
-  DEFAULT CHARSET = utf8
-  COLLATE = utf8_general_ci */;
+)
+  ENGINE = InnoDB;
 
 ALTER TABLE job_request
   ADD INDEX idx_for_sort(created_at);
