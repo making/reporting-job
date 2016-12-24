@@ -10,7 +10,6 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -23,7 +22,7 @@ public class BatchJobConfig {
 	private final StepBuilderFactory stepBuilderFactory;
 
 	public BatchJobConfig(JobBuilderFactory jobBuilderFactory,
-                          StepBuilderFactory stepBuilderFactory) {
+			StepBuilderFactory stepBuilderFactory) {
 		this.jobBuilderFactory = jobBuilderFactory;
 		this.stepBuilderFactory = stepBuilderFactory;
 	}
@@ -51,7 +50,7 @@ public class BatchJobConfig {
 
 	@Bean
 	@StepScope
-	ItemReader<String> myItemReader() {
+	ListItemReader<String> myItemReader() {
 		return new ListItemReader<>(IntStream.range(0, 10).mapToObj(String::valueOf)
 				.collect(Collectors.toList()));
 	}
