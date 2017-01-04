@@ -26,6 +26,7 @@
 
     <modules>
         <module>job-request-api</module>
+        <module>job-request-shared</module>
         <module>job-worker</module>
     </modules>
 
